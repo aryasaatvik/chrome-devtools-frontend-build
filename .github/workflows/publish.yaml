@@ -23,23 +23,31 @@ jobs:
         run: |
           fetch --no-history devtools-frontend
       - name: build
+        working-directory: devtools-frontend
         run: |
-          cd devtools-frontend
           gclient sync
           gn gen out/Default
           autoninja -C out/Default
       - name: version
         id: get_version
+        working-directory: devtools-frontend
         run: |
           # commit position number
           POSITION=$(git rev-list --count HEAD)
           # format version as 1.0.{commit-position}
           FULL_VERSION="1.0.${POSITION}"
           echo "Setting version to $FULL_VERSION"
-          cd ..
           echo "version=$FULL_VERSION" >> $GITHUB_OUTPUT
-          # update package.json with the new version
-          npm version $FULL_VERSION --no-git-tag-version
+          cd ..
+          # check if the version is already in the package.json
+          if ! grep -q "\"version\": \"$FULL_VERSION\"" package.json; then
+            # update package.json with the new version
+            npm version $FULL_VERSION --no-git-tag-version
+            git add package.json package-lock.json
+            git commit -m "chore: update version"
+            git push
+          fi
+
       - name: publish
         run: npm publish
         env:
