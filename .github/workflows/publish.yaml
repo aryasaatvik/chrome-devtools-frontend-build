@@ -10,24 +10,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: setup depot-tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           echo "$GITHUB_WORKSPACE/depot_tools" >> $GITHUB_PATH
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
       - name: fetch
         run: |
-          fetch devtools-frontend
+          fetch --no-history devtools-frontend
           cd devtools-frontend
-          gclient sync
       - name: build
         run: |
+          gclient sync
           gn gen out/Default
           autoninja -C out/Default
-      - name: Version from git tag
+      - name: version
         id: get_version
         run: |
           # commit position number
@@ -39,8 +40,7 @@ jobs:
           echo "version=$FULL_VERSION" >> $GITHUB_OUTPUT
           # update package.json with the new version
           npm version $FULL_VERSION --no-git-tag-version
-      
-      # - name: Publish to npm
-      #   run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
