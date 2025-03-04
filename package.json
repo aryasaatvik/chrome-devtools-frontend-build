@@ -1,0 +1,28 @@
+{
+  "name": "chrome-devtools-frontend-build",
+  "homepage": "https://github.com/aryasaatvik/chrome-devtools-frontend-build#readme",
+  "version": "1.0.0",
+  "description": "Pre-built version of the Chrome DevTools frontend",
+  "type": "module",
+  "scripts": {
+    "prepublishOnly": "node scripts/verify.js"
+  },
+  "files": [
+    "chrome-devtools-frontend/out/Default/gen/front_end/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryasaatvik/chrome-devtools-frontend-build.git"
+  },
+  "keywords": [
+    "chromium",
+    "devtools",
+    "frontend",
+    "debugger"
+  ],
+  "author": "Saatvik Arya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aryasaatvik/chrome-devtools-frontend-build/issues"
+  }
+} 

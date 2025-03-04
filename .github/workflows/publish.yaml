@@ -1,0 +1,46 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup depot-tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          echo "$GITHUB_WORKSPACE/depot_tools" >> $GITHUB_PATH
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: fetch
+        run: |
+          fetch devtools-frontend
+          cd devtools-frontend
+          gclient sync
+      - name: build
+        run: |
+          gn gen out/Default
+          autoninja -C out/Default
+      - name: Version from git tag
+        id: get_version
+        run: |
+          # commit position number
+          POSITION=$(git rev-list --count HEAD)
+          # format version as 1.0.{commit-position}
+          FULL_VERSION="1.0.${POSITION}"
+          echo "Setting version to $FULL_VERSION"
+          cd ..
+          echo "version=$FULL_VERSION" >> $GITHUB_OUTPUT
+          # update package.json with the new version
+          npm version $FULL_VERSION --no-git-tag-version
+      
+      # - name: Publish to npm
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
