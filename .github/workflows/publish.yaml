@@ -6,11 +6,18 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: setup-git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
       - name: setup depot-tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
@@ -21,7 +28,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: fetch
         run: |
-          fetch --no-history devtools-frontend
+          fetch devtools-frontend
       - name: build
         working-directory: devtools-frontend
         run: |
