@@ -22,9 +22,9 @@ jobs:
       - name: fetch
         run: |
           fetch --no-history devtools-frontend
-          cd devtools-frontend
       - name: build
         run: |
+          cd devtools-frontend
           gclient sync
           gn gen out/Default
           autoninja -C out/Default
