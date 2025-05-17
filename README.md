@@ -20,7 +20,7 @@ The DevTools frontend is built from the official Chromium source using the follo
 - gn
 - ninja
 
-The build process runs on GitHub Actions whenever changes are pushed to the main branch. The resulting package is versioned based on the date and commit hash, then published to npm.
+The build process runs on GitHub Actions whenever changes are pushed to the main branch or on a weekly schedule. The resulting package is versioned based on the date and commit hash, then published to npm.
 
 ## License
 
