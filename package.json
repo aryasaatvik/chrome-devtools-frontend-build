@@ -1,7 +1,7 @@
 {
   "name": "chrome-devtools-frontend-build",
   "homepage": "https://github.com/aryasaatvik/chrome-devtools-frontend-build#readme",
-  "version": "1.0.26415",
+  "version": "1.0.26554",
   "description": "Pre-built version of the Chrome DevTools frontend",
   "type": "module",
   "exports": {
